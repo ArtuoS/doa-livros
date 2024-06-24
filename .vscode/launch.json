@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "C:\\Lincros\\doa-livros\\cmd\\app\\main.go",
+            "program": "C:\\Lincros\\doa-livros\\cmd\\frontend\\main.go",
             "host": "127.0.0.1",
             "showLog": true
         }

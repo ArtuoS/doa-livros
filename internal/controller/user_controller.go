@@ -2,11 +2,13 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/ArtuoS/doa-livros/internal/entity"
 	"github.com/ArtuoS/doa-livros/internal/repository"
+	"github.com/gofiber/fiber/v2"
 	"github.com/gorilla/mux"
 )
 
@@ -32,19 +34,23 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseInt(vars["id"], 10, 64)
+func (u *UserController) GetUser(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
-		return
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid user ID")
 	}
-	user, err := c.UserRepo.GetUser(id)
+
+	fmt.Println(id)
+	user, err := u.UserRepo.GetUser(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	json.NewEncoder(w).Encode(user)
+
+	data := fiber.Map{
+		"user": user,
+	}
+	return c.Render("profile", data)
 }
 
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {

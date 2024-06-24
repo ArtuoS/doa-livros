@@ -18,7 +18,7 @@ func (r *UserRepository) CreateUser(user *entity.User) error {
 
 func (r *UserRepository) GetUser(id int64) (entity.User, error) {
 	var user entity.User
-	err := r.DB.Get(&user, "SELECT id, first_name, last_name FROM users WHERE id=$1", id)
+	err := r.DB.Get(&user, "SELECT * FROM users WHERE id=$1", id)
 	if err != nil {
 		return user, err
 	}

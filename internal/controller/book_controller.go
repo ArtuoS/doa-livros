@@ -8,6 +8,7 @@ import (
 	"github.com/ArtuoS/doa-livros/internal/entity"
 	"github.com/ArtuoS/doa-livros/internal/repository"
 	"github.com/ArtuoS/doa-livros/internal/usecase"
+	"github.com/gofiber/fiber/v2"
 	"github.com/gorilla/mux"
 )
 
@@ -23,13 +24,13 @@ func NewBookController(bookRepo *repository.BookRepository, donatedBookRepo *rep
 	}
 }
 
-func (c *BookController) CreateBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookController) CreateBook(w http.ResponseWriter, r *http.Request) {
 	var book entity.Book
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := c.BookRepo.CreateBook(&book); err != nil {
+	if err := b.BookRepo.CreateBook(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -37,14 +38,14 @@ func (c *BookController) CreateBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
-func (c *BookController) GetBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookController) GetBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
 		http.Error(w, "Invalid book ID", http.StatusBadRequest)
 		return
 	}
-	book, err := c.BookRepo.GetBook(id)
+	book, err := b.BookRepo.GetBook(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -52,7 +53,16 @@ func (c *BookController) GetBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
-func (c *BookController) UpdateBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookController) GetAllBooks(c *fiber.Ctx) error {
+	books, err := b.BookRepo.GetAllBooks()
+	if err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	return c.Render("books", fiber.Map{"Books": books})
+}
+
+func (b *BookController) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
@@ -65,7 +75,7 @@ func (c *BookController) UpdateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	book.Id = id
-	if err := c.BookRepo.UpdateBook(&book); err != nil {
+	if err := b.BookRepo.UpdateBook(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -73,33 +83,30 @@ func (c *BookController) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
-func (c *BookController) DeleteBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookController) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
 		http.Error(w, "Invalid book ID", http.StatusBadRequest)
 		return
 	}
-	if err := c.BookRepo.DeleteBook(id); err != nil {
+	if err := b.BookRepo.DeleteBook(id); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (c *BookController) RedeemBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookController) RedeemBook(c *fiber.Ctx) error {
 	var donatedBook entity.DonatedBook
-	err := json.NewDecoder(r.Body).Decode(&donatedBook)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	if err := c.BodyParser(&donatedBook); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	model := usecase.NewDonateBookModel(&donatedBook)
-	if err := usecase.NewDonateBookUseCase(c.BookRepo, c.DonatedBookRepo, model).Handle(); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	if err := usecase.NewDonateBookUseCase(b.BookRepo, b.DonatedBookRepo, model).Handle(); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	return c.SendString("Redeem request processed successfully")
 }
