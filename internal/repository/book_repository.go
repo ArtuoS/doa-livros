@@ -24,7 +24,7 @@ func (r *BookRepository) GetBook(id int64) (entity.Book, error) {
 
 func (r *BookRepository) GetAllBooks() ([]entity.Book, error) {
 	var books []entity.Book
-	err := r.DB.Select(&books, "SELECT id, title, author, user_id, donating FROM books")
+	err := r.DB.Select(&books, "SELECT id, title, author, user_id, donating FROM books ORDER BY donating DESC")
 	return books, err
 }
 

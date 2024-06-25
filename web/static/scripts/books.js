@@ -1,3 +1,5 @@
+import { getCookie } from "./cookieManager.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   const buttons = document.querySelectorAll(".book button");
   buttons.forEach(function (button) {
@@ -18,11 +20,16 @@ const redeem = (data) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + getCookie("jwt"),
     },
     body: JSON.stringify(data),
   })
-    .then((data) => {
-      console.log("Books data:", data);
+    .then((response) => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        return response.json();
+      }
     })
     .catch((error) => {
       console.error("Fetch error:", error);

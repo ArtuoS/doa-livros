@@ -36,6 +36,15 @@ func (r *UserRepository) GetUser(id int64) (entity.User, error) {
 	return user, nil
 }
 
+func (r *UserRepository) GetUserByAuth(auth entity.Auth) (entity.User, error) {
+	var user entity.User
+	err := r.DB.Get(&user, "SELECT * FROM users WHERE email=$1 and password=$2", auth.Email, auth.Password)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 func (r *UserRepository) UpdateUser(user *entity.User) error {
 	_, err := r.DB.Exec(
 		"UPDATE users SET first_name=$1, last_name=$2 WHERE id=$3",

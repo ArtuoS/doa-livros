@@ -108,5 +108,5 @@ func (b *BookController) RedeemBook(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
-	return c.SendString("Redeem request processed successfully")
+	return c.Redirect("/")
 }
