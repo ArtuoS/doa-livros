@@ -23,12 +23,12 @@ func (r *UserRepository) GetUser(id int64) (entity.User, error) {
 		return user, err
 	}
 
-	err = r.DB.Select(&user.Books, "SELECT id, user_id, title, author FROM books WHERE user_id=$1", id)
+	err = r.DB.Select(&user.Books, "SELECT * FROM books WHERE user_id=$1", id)
 	if err != nil {
 		return user, err
 	}
 
-	err = r.DB.Select(&user.DonatedBooks, "SELECT book_id FROM donated_books WHERE from_user_id=$1", id)
+	err = r.DB.Select(&user.DonatedBooks, "SELECT * FROM donated_books WHERE from_user_id=$1", id)
 	if err != nil {
 		return user, err
 	}
