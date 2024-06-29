@@ -1,35 +1,27 @@
 package main
 
 import (
-	"log"
 	"strings"
 
 	"github.com/ArtuoS/doa-livros/internal/controller"
 	"github.com/ArtuoS/doa-livros/internal/entity"
 	"github.com/ArtuoS/doa-livros/internal/repository"
+	"github.com/ArtuoS/doa-livros/internal/server"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/golang-jwt/jwt"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
-var DB *sqlx.DB
-
 func main() {
-	db, err := sqlx.Connect("postgres", "user=postgres password=root dbname=doalivros sslmode=disable")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	server := server.SetupDatabase()
 
-	bookRepo := &repository.BookRepository{DB: db}
-	userRepo := &repository.UserRepository{DB: db}
-	donatedBookRepo := &repository.DonatedBookRepository{DB: db}
+	bookRepo := &repository.BookRepository{DB: server.DB}
+	userRepo := &repository.UserRepository{DB: server.DB}
+	donatedBookRepo := &repository.DonatedBookRepository{DB: server.DB}
 
 	userController := controller.NewUserController(userRepo)
 	bookController := controller.NewBookController(bookRepo, donatedBookRepo)
-
-	DB = db
 
 	app := fiber.New(fiber.Config{
 		Views: html.New("././web/views", ".html"),
