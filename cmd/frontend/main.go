@@ -29,18 +29,19 @@ func main() {
 
 	app.Static("/", "././web/static")
 
-	app.Get("/", bookController.GetAllBooks)
-	app.Get("/books", bookController.GetAllBooks)
-
-	app.Get("/users/auth", userController.GetAuthentication)
-	app.Post("/users/auth", userController.Authenticate)
-
-	app.Use(JWTMiddleware())
+	app.Get("/auth", userController.GetAuthentication)
+	app.Post("/auth", userController.Authenticate)
 
 	app.Post("/books/redeem", bookController.RedeemBook)
-	app.Get("/users/profile/:id", userController.GetUser)
+	app.Get("/users/:id/profile", userController.GetUser)
+
+	app.Get("/", bookController.GetAllBooks)
+	app.Get("/books", bookController.GetAllBooks)
+	app.Put("/books/:id/donate", bookController.AddBookToDonation)
 
 	app.Listen("127.0.0.1:8080")
+
+	// app.Use(JWTMiddleware())
 }
 
 func JWTMiddleware() fiber.Handler {
@@ -48,7 +49,7 @@ func JWTMiddleware() fiber.Handler {
 		tokenString := c.Get("Authorization")
 
 		if tokenString == "" {
-			return c.Redirect("/users/auth")
+			return c.Redirect("/auth")
 		}
 
 		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
@@ -61,13 +62,13 @@ func JWTMiddleware() fiber.Handler {
 
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
-				return c.Redirect("/users/auth")
+				return c.Redirect("/auth")
 			}
-			return c.Redirect("/users/auth")
+			return c.Redirect("/auth")
 		}
 
 		if !token.Valid {
-			return c.Redirect("/users/auth")
+			return c.Redirect("/auth")
 		}
 
 		c.Locals("user", claims)

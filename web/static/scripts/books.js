@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function () {
       if (!this.disabled) {
         redeem({
-          ToUserId: parseInt(localStorage.getItem("logged_user")),
+          ToUserId: parseInt(getCookie("logged_user_id")),
           FromUserId: parseInt(this.closest(".book").dataset.owner),
           BookId: parseInt(this.closest(".book").id),
         });

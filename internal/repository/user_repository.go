@@ -28,7 +28,7 @@ func (r *UserRepository) GetUser(id int64) (entity.User, error) {
 		return user, err
 	}
 
-	err = r.DB.Select(&user.DonatedBooks, "SELECT * FROM donated_books WHERE from_user_id=$1", id)
+	err = r.DB.Select(&user.DonatedBooks, "SELECT db.*, CONCAT(u.first_name, ' ', u.last_name) as to_user_name FROM donated_books db INNER JOIN users u ON u.id = db.to_user_id WHERE from_user_id=$1", id)
 	if err != nil {
 		return user, err
 	}

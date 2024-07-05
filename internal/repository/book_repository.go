@@ -60,3 +60,10 @@ func (r *BookRepository) ChangeOwner(userId, bookId int64) error {
 
 	return err
 }
+
+func (r *BookRepository) AddBookToDonation(bookId int64) error {
+	_, err := r.DB.Exec(
+		"UPDATE books SET donating=true WHERE id=$1", bookId)
+
+	return err
+}

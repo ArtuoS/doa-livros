@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/ArtuoS/doa-livros/internal/entity"
@@ -44,7 +43,8 @@ func (u *UserController) Authenticate(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"token": token,
+		"token":        token,
+		"loggedUserId": user.Id,
 	})
 }
 
@@ -55,7 +55,6 @@ func (u *UserController) GetUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid user ID")
 	}
 
-	fmt.Println(id)
 	user, err := u.UserRepo.GetUser(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
@@ -64,5 +63,6 @@ func (u *UserController) GetUser(c *fiber.Ctx) error {
 	data := fiber.Map{
 		"user": user,
 	}
+
 	return c.Render("profile", data)
 }

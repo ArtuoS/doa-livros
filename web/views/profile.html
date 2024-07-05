@@ -3,14 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/scripts/profile.js"></script>
     <title>User Profile</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     />
-    <style>
-      /* Custom styles if needed */
-    </style>
   </head>
   <body>
     <div class="container mt-5">
@@ -21,22 +19,26 @@
               <h3 class="card-title">{{.user.FirstName}} {{.user.LastName}}</h3>
             </div>
             <div class="card-body">
-              <h5 class="card-subtitle mb-2 text-muted">Books</h5>
+              <h5 class="card-subtitle mb-2 text-muted">Livros</h5>
               <ul class="list-group mb-3">
                 {{range .user.Books}}
                 <li class="list-group-item">
-                  <strong>Title:</strong> {{.Title}} <br />
-                  <strong>Author:</strong> {{.Author}} <br />
-                  <strong>Status:</strong> {{if .Donating}}Donating{{else}}Not
-                  Donating{{end}}
+                  <strong>Título:</strong> {{.Title}} <br />
+                  <strong>Autor:</strong> {{.Author}} <br />
+                  <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não está doando{{end}} <br />
+                  {{if .Donating}}
+                  <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation" title="Livro já está para doação." disabled>Colocar para doação</button>
+                  {{else}}
+                  <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation">Colocar para doação</button>
+                  {{end}}
                 </li>
                 {{end}}
               </ul>
-              <h5 class="card-subtitle mb-2 text-muted">Donated Books</h5>
+              <h5 class="card-subtitle mb-2 text-muted">Livros Doados</h5>
               <ul class="list-group">
                 {{range .user.DonatedBooks}}
                 <li class="list-group-item">
-                  <strong>Donated To:</strong> {{.ToUserId}}
+                  <strong>Doado para:</strong> {{.ToUserName}}
                 </li>
                 {{end}}
               </ul>

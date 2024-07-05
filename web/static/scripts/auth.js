@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const auth = (data) => {
-  fetch("/users/auth", {
+  fetch("/auth", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,6 +21,7 @@ const auth = (data) => {
     .then((response) => response.json())
     .then((data) => {
       setCookie("jwt", data.token, 1);
+      setCookie("logged_user_id", data.loggedUserId, 1);
       window.location.href = "/";
     })
     .catch((error) => {
