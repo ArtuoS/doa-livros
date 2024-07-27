@@ -1,0 +1,12 @@
+.container-profile-info {
+    display: flex !important;
+}
+
+.profile-info {
+    width: 98%;
+}
+
+.btn-close {
+    border: 1px solid !important;
+    background-color: firebrick !important;
+}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
+    <link rel="stylesheet" href="/styles/profile.css" />
     <script type="module" src="/scripts/profile.js"></script>
     <script type="module" src="/scripts/index.js"></script>
     <title>User Profile</title>
@@ -20,8 +21,8 @@
           alt="User Icon"
         />
         <div class="user-dropdown-content">
-          <a href="" id="books-button">Books</a>
-          <a href="" id="exit-button">Exit</a>
+          <a href="" id="books-button">Livros</a>
+          <a href="" id="exit-button">Sair</a>
         </div>
       </div>
       <div class="row">
@@ -34,16 +35,23 @@
               <h5 class="card-subtitle mb-2 text-muted">Seus Livros</h5>
               <ul class="list-group mb-3">
                 {{range .user.Books}}
-                <li class="list-group-item">
-                  <strong>Título:</strong> {{.Title}} <br />
-                  <strong>Autor:</strong> {{.Author}} <br />
-                  <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não está doando{{end}} <br />
-                  {{if .Donating}}
-                  <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation" title="Livro já está para doação." disabled>Colocar para doação</button>
-                  {{else}}
-                  <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation">Colocar para doação</button>
-                  {{end}}
-                </li>
+                <div>
+                  <li class="list-group-item container-profile-info">
+                    <div class="profile-info">
+                      <strong>Título:</strong> {{.Title}} <br />
+                      <strong>Autor:</strong> {{.Author}} <br />
+                      <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não está doando{{end}} <br />
+                      {{if .Donating}}
+                      <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation" title="Livro já está para doação." disabled>Colocar para doação</button>
+                      {{else}}
+                      <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation">Colocar para doação</button>
+                      {{end}}
+                    </div>
+                    <div>
+                      <button type="button" class="btn-close delete-book-button" data-book-id="{{.Id}}" aria-label="Close"></button>
+                    </div>
+                  </li>
+                </div>
                 {{end}}
               </ul>
               <h5 class="card-subtitle mb-2 text-muted">Livros Doados</h5>
