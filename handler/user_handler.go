@@ -1,26 +1,26 @@
-package controller
+package handler
 
 import (
 	"strconv"
 
-	"github.com/ArtuoS/doa-livros/internal/entity"
-	"github.com/ArtuoS/doa-livros/internal/repository"
+	"github.com/ArtuoS/doa-livros/entity"
+	"github.com/ArtuoS/doa-livros/infrastructure/repository"
 	"github.com/gofiber/fiber/v2"
 )
 
-type UserController struct {
+type UserHandler struct {
 	UserRepo *repository.UserRepository
 }
 
-func NewUserController(userRepo *repository.UserRepository) *UserController {
-	return &UserController{UserRepo: userRepo}
+func NewUserHandler(userRepo *repository.UserRepository) *UserHandler {
+	return &UserHandler{UserRepo: userRepo}
 }
 
-func (u *UserController) GetAuthentication(c *fiber.Ctx) error {
+func (u *UserHandler) GetAuthentication(c *fiber.Ctx) error {
 	return c.Render("auth", nil)
 }
 
-func (u *UserController) Authenticate(c *fiber.Ctx) error {
+func (u *UserHandler) Authenticate(c *fiber.Ctx) error {
 	var auth entity.Auth
 	if err := c.BodyParser(&auth); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -48,7 +48,7 @@ func (u *UserController) Authenticate(c *fiber.Ctx) error {
 	})
 }
 
-func (u *UserController) GetUser(c *fiber.Ctx) error {
+func (u *UserHandler) GetUser(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {

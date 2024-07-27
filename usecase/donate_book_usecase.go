@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"github.com/ArtuoS/doa-livros/internal/entity"
-	"github.com/ArtuoS/doa-livros/internal/repository"
+	"github.com/ArtuoS/doa-livros/entity"
+	"github.com/ArtuoS/doa-livros/infrastructure/repository"
 )
 
 type DonateBookUseCase struct {

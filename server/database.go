@@ -11,6 +11,7 @@ type Database struct {
 }
 
 func SetupDatabase() Database {
+	// config.ConnectionString
 	db, err := sqlx.Connect("postgres", "user=postgres password=root dbname=doalivros sslmode=disable")
 	if err != nil {
 		log.Fatalln(err)

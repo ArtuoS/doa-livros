@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="add-book">
-        <img src="https://cdn-icons-png.freepik.com/512/8207/8207880.png" alt="Add Button" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
+        <img src="https://cdn-icons-png.freepik.com/512/8207/8207880.png" alt="Add Button" data-bs-toggle="modal" data-bs-target="#create-book-modal"/>
       </div>
       <div class="row">
         {{range .Books}}
@@ -56,7 +56,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="create-book-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -77,7 +77,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            <button type="button" class="btn btn-primary" onclick="saveChanges()">Salvar</button>
+            <button type="button" class="btn btn-primary" id="create-book-button">Salvar</button>
           </div>
         </div>
       </div>

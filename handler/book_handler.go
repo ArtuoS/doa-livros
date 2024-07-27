@@ -1,44 +1,44 @@
-package controller
+package handler
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
 
-	"github.com/ArtuoS/doa-livros/internal/entity"
-	"github.com/ArtuoS/doa-livros/internal/repository"
-	"github.com/ArtuoS/doa-livros/internal/usecase"
+	"github.com/ArtuoS/doa-livros/entity"
+	"github.com/ArtuoS/doa-livros/infrastructure/repository"
+	"github.com/ArtuoS/doa-livros/usecase"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gorilla/mux"
 )
 
-type BookController struct {
+type BookHandler struct {
 	BookRepo        *repository.BookRepository
 	DonatedBookRepo *repository.DonatedBookRepository
 }
 
-func NewBookController(bookRepo *repository.BookRepository, donatedBookRepo *repository.DonatedBookRepository) *BookController {
-	return &BookController{
+func NewBookHandler(bookRepo *repository.BookRepository, donatedBookRepo *repository.DonatedBookRepository) *BookHandler {
+	return &BookHandler{
 		BookRepo:        bookRepo,
 		DonatedBookRepo: donatedBookRepo,
 	}
 }
 
-func (b *BookController) CreateBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookHandler) CreateBook(ctx *fiber.Ctx) error {
 	var book entity.Book
-	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	if err := ctx.BodyParser(&book); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
+
+	book.Donating = true
 	if err := b.BookRepo.CreateBook(&book); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(book)
+
+	return ctx.Redirect("/")
 }
 
-func (b *BookController) GetBook(w http.ResponseWriter, r *http.Request) {
+func (b *BookHandler) GetBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
@@ -53,7 +53,7 @@ func (b *BookController) GetBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
-func (b *BookController) GetAllBooks(c *fiber.Ctx) error {
+func (b *BookHandler) GetAllBooks(c *fiber.Ctx) error {
 	books, err := b.BookRepo.GetAllBooks()
 	if err != nil {
 		return c.Status(500).SendString(err.Error())
@@ -62,7 +62,7 @@ func (b *BookController) GetAllBooks(c *fiber.Ctx) error {
 	return c.Render("books", fiber.Map{"Books": books})
 }
 
-func (b *BookController) AddBookToDonation(c *fiber.Ctx) error {
+func (b *BookHandler) AddBookToDonation(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
@@ -77,7 +77,7 @@ func (b *BookController) AddBookToDonation(c *fiber.Ctx) error {
 	return c.Render("books", fiber.Map{"Books": books})
 }
 
-func (b *BookController) RedeemBook(c *fiber.Ctx) error {
+func (b *BookHandler) RedeemBook(c *fiber.Ctx) error {
 	var donatedBook entity.DonatedBook
 	if err := c.BodyParser(&donatedBook); err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())

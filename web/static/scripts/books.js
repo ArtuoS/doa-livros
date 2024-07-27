@@ -13,10 +13,41 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  const createBookModal = document.getElementById("create-book-modal");
+  const createBookButton = createBookModal.querySelector("#create-book-button");
+  createBookButton.addEventListener("click", function () {
+    create({
+      Title: createBookModal.querySelector("#title").value,
+      Author: createBookModal.querySelector("#author").value,
+      UserId: parseInt(getCookie("logged_user_id"))
+    });
+  });
 });
 
 const redeem = (data) => {
   fetch("/books/redeem", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + getCookie("jwt"),
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        return response.json();
+      }
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
+};
+
+const create = (data) => {
+  fetch("/books", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

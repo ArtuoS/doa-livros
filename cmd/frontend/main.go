@@ -3,10 +3,10 @@ package main
 import (
 	"strings"
 
-	"github.com/ArtuoS/doa-livros/internal/controller"
-	"github.com/ArtuoS/doa-livros/internal/entity"
-	"github.com/ArtuoS/doa-livros/internal/repository"
-	"github.com/ArtuoS/doa-livros/internal/server"
+	"github.com/ArtuoS/doa-livros/entity"
+	"github.com/ArtuoS/doa-livros/handler"
+	"github.com/ArtuoS/doa-livros/infrastructure/repository"
+	"github.com/ArtuoS/doa-livros/server"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/golang-jwt/jwt"
@@ -20,8 +20,8 @@ func main() {
 	userRepo := &repository.UserRepository{DB: server.DB}
 	donatedBookRepo := &repository.DonatedBookRepository{DB: server.DB}
 
-	userController := controller.NewUserController(userRepo)
-	bookController := controller.NewBookController(bookRepo, donatedBookRepo)
+	userHandler := handler.NewUserHandler(userRepo)
+	bookHandler := handler.NewBookHandler(bookRepo, donatedBookRepo)
 
 	app := fiber.New(fiber.Config{
 		Views: html.New("././web/views", ".html"),
@@ -29,15 +29,16 @@ func main() {
 
 	app.Static("/", "././web/static")
 
-	app.Get("/auth", userController.GetAuthentication)
-	app.Post("/auth", userController.Authenticate)
+	app.Get("/auth", userHandler.GetAuthentication)
+	app.Post("/auth", userHandler.Authenticate)
 
-	app.Post("/books/redeem", bookController.RedeemBook)
-	app.Get("/users/:id/profile", userController.GetUser)
+	app.Post("/books/redeem", bookHandler.RedeemBook)
+	app.Get("/users/:id/profile", userHandler.GetUser)
 
-	app.Get("/", bookController.GetAllBooks)
-	app.Get("/books", bookController.GetAllBooks)
-	app.Put("/books/:id/donate", bookController.AddBookToDonation)
+	app.Get("/", bookHandler.GetAllBooks)
+	app.Get("/books", bookHandler.GetAllBooks)
+	app.Put("/books/:id/donate", bookHandler.AddBookToDonation)
+	app.Post("/books", bookHandler.CreateBook)
 
 	app.Listen("127.0.0.1:8080")
 

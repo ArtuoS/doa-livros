@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/ArtuoS/doa-livros/internal/entity"
+	"github.com/ArtuoS/doa-livros/entity"
 	"github.com/jmoiron/sqlx"
 )
 
