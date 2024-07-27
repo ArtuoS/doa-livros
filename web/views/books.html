@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fiber Example</title>
-    <link rel="stylesheet" href="/styles/books.css" />
+    <link rel="stylesheet" href="/styles/index.css" />
     <script type="module" src="/scripts/books.js"></script>
     <script type="module" src="/scripts/index.js"></script>
     <script
@@ -28,8 +28,11 @@
         />
         <div class="user-dropdown-content">
           <a href="" id="profile-button">My Profile</a>
-          <a href="" id="">Exit</a>
+          <a href="" id="exit-button">Exit</a>
         </div>
+      </div>
+      <div class="add-book">
+        <img src="https://cdn-icons-png.freepik.com/512/8207/8207880.png" alt="Add Button" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
       </div>
       <div class="row">
         {{range .Books}}
@@ -49,6 +52,34 @@
           </div>
         </div>
         {{end}}
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Adicionar livro para doação</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="bookForm">
+              <div class="mb-3">
+                <label for="title" class="form-label">Título</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+              <div class="mb-3">
+                <label for="author" class="form-label">Autor</label>
+                <input type="text" class="form-control" id="author" name="author" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-primary" onclick="saveChanges()">Salvar</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>

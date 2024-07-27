@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/index.css" />
     <script type="module" src="/scripts/profile.js"></script>
+    <script type="module" src="/scripts/index.js"></script>
     <title>User Profile</title>
     <link
       rel="stylesheet"
@@ -12,14 +14,24 @@
   </head>
   <body>
     <div class="container mt-5">
+      <div class="user-dropdown">
+        <img
+          src="https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png"
+          alt="User Icon"
+        />
+        <div class="user-dropdown-content">
+          <a href="" id="books-button">Books</a>
+          <a href="" id="exit-button">Exit</a>
+        </div>
+      </div>
       <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div>
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">{{.user.FirstName}} {{.user.LastName}}</h3>
             </div>
             <div class="card-body">
-              <h5 class="card-subtitle mb-2 text-muted">Livros</h5>
+              <h5 class="card-subtitle mb-2 text-muted">Seus Livros</h5>
               <ul class="list-group mb-3">
                 {{range .user.Books}}
                 <li class="list-group-item">

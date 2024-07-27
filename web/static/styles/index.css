@@ -1,8 +1,12 @@
-/* .user-dropdown {
+.user-dropdown, .add-book {
     position: relative;
     display: inline-block;
     margin-right: 20px;
     margin-bottom: 20px;
+}
+
+.user-dropdown:hover, .add-book:hover {
+    cursor: pointer;
 }
 
 .user-dropdown-content {
@@ -29,6 +33,6 @@
     display: block;
 }   
 
-.user-dropdown img {
+.user-dropdown img, .add-book img {
     width: 10%;
-} */
+}
