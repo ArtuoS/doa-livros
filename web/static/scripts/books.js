@@ -1,8 +1,19 @@
 import { getCookie } from "./cookieManager.js";
+import { showModal } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+  if (getCookie("logged_user_id") == null) {
+    window.location.href = "/auth";
+    return;
+  }
+
   const buttons = document.querySelectorAll(".book button");
   buttons.forEach(function (button) {
+    if (parseInt(button.closest(".book").dataset.owner) == parseInt(getCookie("logged_user_id"))) {
+      button.disabled = true;
+      button.className = "btn btn-secondary";
+    } 
+
     button.addEventListener("click", function () {
       if (!this.disabled) {
         redeem({

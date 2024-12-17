@@ -11,8 +11,8 @@ type UserRepository struct {
 
 func (r *UserRepository) CreateUser(user *entity.User) error {
 	err := r.DB.QueryRowx(
-		"INSERT INTO users (first_name, last_name) VALUES ($1, $2) RETURNING id",
-		user.FirstName, user.LastName).Scan(&user.Id)
+		"INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id",
+		user.FirstName, user.LastName, user.Email, user.Password).Scan(&user.Id)
 	return err
 }
 
@@ -36,13 +36,13 @@ func (r *UserRepository) GetUser(id int64) (entity.User, error) {
 	return user, nil
 }
 
-func (r *UserRepository) GetUserByAuth(auth entity.Auth) (entity.User, error) {
+func (r *UserRepository) GetUserByAuth(auth entity.Auth) (*entity.User, error) {
 	var user entity.User
-	err := r.DB.Get(&user, "SELECT * FROM users WHERE email=$1 and password=$2", auth.Email, auth.Password)
+	err := r.DB.Get(&user, "SELECT * FROM users WHERE email=$1 AND password=$2", auth.Email, auth.Password)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (r *UserRepository) UpdateUser(user *entity.User) error {

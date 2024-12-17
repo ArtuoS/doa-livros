@@ -30,8 +30,21 @@ func (b *BookHandler) CreateBook(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
-	book.Donating = true
+	book.Donating = false
 	if err := b.BookRepo.CreateBook(&book); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	return ctx.Redirect("/")
+}
+
+func (b *BookHandler) DeleteBook(ctx *fiber.Ctx) error {
+	bookID, err := strconv.ParseInt(ctx.Params("id"), 10, 64)
+	if err != nil {
+		return err
+	}
+
+	if err := b.BookRepo.DeleteBook(bookID); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 

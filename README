@@ -1,0 +1,18 @@
+# Projeto desenvolvido por Arthur Eduardo Molinari
+# Atividade Extensionista - UNINTER
+# RU 3928146
+
+# Requisitos para rodar o projeto
+- Go >= 1.22
+- Docker
+- DBeaver ou algum outro gerenciador de banco de dados
+
+# Informações sobre o projeto
+- Back-end escrito em Go
+- Front-end escrito em Javascript, HTML e CSS
+- Banco de dados utilizado foi o Postgres
+
+# Como rodar o projeto
+- Na pasta base do projeto existe um arquivo "docker-compose.yml", executar "docker-compose up -d" para subir o banco de dados
+- Ao subir o banco de dados, criar um novo banco chamado "doalivros"
+- Ainda na pasta base do projeto executar "go run .\cmd\frontend\main.go" para subir o projeto

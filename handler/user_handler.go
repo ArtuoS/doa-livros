@@ -29,7 +29,7 @@ func (u *UserHandler) Authenticate(c *fiber.Ctx) error {
 	}
 
 	user, err := u.UserRepo.GetUserByAuth(auth)
-	if err != nil {
+	if err != nil || user == nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error": "Invalid email or password",
 		})
@@ -65,4 +65,17 @@ func (u *UserHandler) GetUser(c *fiber.Ctx) error {
 	}
 
 	return c.Render("profile", data)
+}
+
+func (u *UserHandler) CreateUser(c *fiber.Ctx) error {
+	var user entity.User
+	if err := c.BodyParser(&user); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+
+	if err := u.UserRepo.CreateUser(&user); err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	return c.Redirect("/")
 }

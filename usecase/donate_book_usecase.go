@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/ArtuoS/doa-livros/entity"
 	"github.com/ArtuoS/doa-livros/infrastructure/repository"
 )
@@ -30,8 +32,16 @@ func NewDonateBookModel(donatedBook *entity.DonatedBook) *DonateBookModel {
 }
 
 func (d *DonateBookUseCase) Handle() error {
-	err := d.BookRepository.ChangeOwner(d.Model.DonateBook.ToUserId, d.Model.DonateBook.BookId)
+	book, err := d.BookRepository.GetBook(d.Model.DonateBook.BookId)
 	if err != nil {
+		return err
+	}
+
+	if book.UserId == d.Model.DonateBook.ToUserId {
+		return errors.New("user already own this book")
+	}
+
+	if err := d.BookRepository.ChangeOwner(d.Model.DonateBook.ToUserId, d.Model.DonateBook.BookId); err != nil {
 		return err
 	}
 
