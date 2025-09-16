@@ -1,0 +1,76 @@
+name: Create Manual Semantic Release PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type (major, minor, patch)"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: get_last_tag
+        run: |
+          tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+      - name: Calculate next version
+        id: bump_version
+        run: |
+          current="${{ steps.get_last_tag.outputs.tag }}"
+          echo "Current version: $current"
+          bump="${{ github.event.inputs.bump }}"
+
+          version=${current#v} # strip 'v'
+          IFS='.' read -r major minor patch <<< "$version"
+
+          case "$bump" in
+            major) major=$((major+1)); minor=0; patch=0 ;;
+            minor) minor=$((minor+1)); patch=0 ;;
+            patch) patch=$((patch+1)) ;;
+          esac
+
+          new="v$major.$minor.$patch"
+          echo "new=$new" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          notes=$(git log ${{ steps.get_last_tag.outputs.tag }}..origin/staging --pretty=format:"- %s")
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$notes" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create release branch
+        run: |
+          branch="release/${{ steps.bump_version.outputs.new }}"
+          git fetch origin
+          git checkout origin/staging -b "$branch"
+          git push origin "$branch"
+
+      - name: Create Pull Request into main
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/${{ steps.bump_version.outputs.new }}
+          base: main
+          title: "Release ${{ steps.bump_version.outputs.new }}"
+          body: |
+            ## Release ${{ steps.bump_version.outputs.new }}
+            ### Changes
+            ${{ steps.changelog.outputs.notes }}
