@@ -55,7 +55,7 @@ func (b *BookHandler) GetBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		http.Error(w, "invalid book ID", http.StatusBadRequest)
 		return
 	}
 	book, err := b.BookRepo.GetBook(id)
