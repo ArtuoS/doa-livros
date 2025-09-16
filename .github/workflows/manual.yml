@@ -55,7 +55,7 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          notes=$(git log ${{ steps.get_last_tag.outputs.tag }}..origin/staging --pretty=format:"- %s")
+          notes=$(git log ${{ steps.get_last_tag.outputs.tag }}..origin/release --pretty=format:"- %s")
           echo "notes<<EOF" >> $GITHUB_OUTPUT
           echo "$notes" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -64,7 +64,7 @@ jobs:
         run: |
           branch="release/${{ steps.bump_version.outputs.new }}"
           git fetch origin
-          git checkout origin/staging -b "$branch"
+          git checkout origin/release -b "$branch"
           git push origin "$branch"
 
       - name: Create Pull Request into main
