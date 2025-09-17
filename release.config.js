@@ -18,6 +18,23 @@ const config = {
           'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
+    [
+      '@semantic-release/exec',
+      {
+        successCmd: `
+          BRANCH="release/v\${nextRelease.version}";
+          git fetch origin;
+          if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
+            echo "Branch $BRANCH já existe. Atualizando...";
+            git checkout -B $BRANCH;
+          else
+            echo "Criando nova branch $BRANCH...";
+            git checkout -b $BRANCH;
+          fi
+          git push origin $BRANCH --force;
+        `,
+      },
+    ],
     '@semantic-release/github',
   ],
 };
