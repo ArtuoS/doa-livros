@@ -1,7 +1,9 @@
 name: Release
-
 on:
   workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   release:
@@ -9,26 +11,22 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Semantic Release
+        id: release
+        uses: cycjimmy/semantic-release-action@v3
         with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - run: npm install
-
-      - name: Get Release Token
-        id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v3
-        with:
-          application_id: ${{ secrets.RELEASE_APP_ID }}
-          application_private_key: ${{ secrets.RELEASE_APP_CERT }}
-
-      - run: npx semantic-release
+          working_directory: ./Gpanga.Example.SDK
+          extra_plugins: |
+            @semantic-release/commit-analyzer
+            @semantic-release/release-notes-generator
+            @semantic-release/github
+            @semantic-release/git
+            @semantic-release/exec
         env:
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
