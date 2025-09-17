@@ -1,9 +1,9 @@
 name: Release
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+    # push:
+    #   branches:
+    #     - main
 
 jobs:
   release:
@@ -36,20 +36,23 @@ jobs:
 
       - name: Run Semantic Release
         id: release
-        uses: cycjimmy/semantic-release-action@v3
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get next release version
+        id: get_version
+        run: |
+          VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $6}')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create release branch
         if: success()
         run: |
-          VERSION=${{ steps.release.outputs.nextRelease.version }}
           BRANCH_NAME="release/v$VERSION"
-
           git checkout main
           git pull origin main
           git checkout -b $BRANCH_NAME
-
           git push origin $BRANCH_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
