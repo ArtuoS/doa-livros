@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.5.0](https://github.com/ArtuoS/doa-livros/compare/v1.4.0...v1.5.0) (2025-09-17)
+
+
+### Features
+
+* gerando branch de release. ([32bf95c](https://github.com/ArtuoS/doa-livros/commit/32bf95c5bcf8147654677fb2876dd8186d4d8998))
+
 # [1.4.0](https://github.com/ArtuoS/doa-livros/compare/v1.3.0...v1.4.0) (2025-09-17)
 
 
