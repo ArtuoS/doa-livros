@@ -1,5 +1,4 @@
 import { getCookie } from "./cookieManager.js";
-import { showModal } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   if (getCookie("logged_user_id") == null) {
