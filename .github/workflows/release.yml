@@ -1,41 +1,77 @@
+# name: Release
+# on:
+#   workflow_dispatch:
+#   # push:
+#   #   branches:
+#   #     - main
+
+# jobs:
+#   release:
+#     permissions:
+#       contents: write
+#       issues: write
+#       pull-requests: write
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0 # importante para semantic-release ler o histórico de commits
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+
+#       - name: Install dependencies
+#         run: |
+#           npm install -g semantic-release \
+#             @semantic-release/commit-analyzer \
+#             @semantic-release/release-notes-generator \
+#             @semantic-release/changelog \
+#             @semantic-release/github \
+#             @semantic-release/git \
+#             @semantic-release/exec
+
+#       - name: Run Semantic Release
+#         id: release
+#         uses: cycjimmy/semantic-release-action@v3
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 name: Release
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
 
 jobs:
   release:
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
       pull-requests: write
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # importante para semantic-release ler o histórico de commits
+          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
+      - name: Run Semantic Release via Docker
         run: |
-          npm install -g semantic-release \
-            @semantic-release/commit-analyzer \
-            @semantic-release/release-notes-generator \
-            @semantic-release/changelog \
-            @semantic-release/github \
-            @semantic-release/git \
-            @semantic-release/exec
-
-      - name: Run Semantic Release
-        id: release
-        uses: cycjimmy/semantic-release-action@v3
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            node:18-bullseye \
+            sh -c "\
+              npm install -g semantic-release \
+                @semantic-release/commit-analyzer \
+                @semantic-release/release-notes-generator \
+                @semantic-release/changelog \
+                @semantic-release/github \
+                @semantic-release/git \
+                @semantic-release/exec && \
+              npx semantic-release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
