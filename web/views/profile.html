@@ -40,7 +40,7 @@
                     <div class="profile-info">
                       <strong>Título:</strong> {{.Title}} <br />
                       <strong>Autor:</strong> {{.Author}} <br />
-                      <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não está doando{{end}} <br />
+                      <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não doando{{end}} <br />
                       {{if .Donating}}
                       <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation" title="Livro já está para doação." disabled>Colocar para doação</button>
                       {{else}}
