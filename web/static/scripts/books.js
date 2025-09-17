@@ -52,7 +52,7 @@ const redeem = (data) => {
       }
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
+      console.error("Error:", error);
     });
 };
 
