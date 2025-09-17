@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.6.0](https://github.com/ArtuoS/doa-livros/compare/v1.5.0...v1.6.0) (2025-09-17)
+
+
+### Features
+
+* gerando branch. ([157a47f](https://github.com/ArtuoS/doa-livros/commit/157a47f30b22e25350fb8cc0341228b26f7e156e))
+
 # [1.5.0](https://github.com/ArtuoS/doa-livros/compare/v1.4.0...v1.5.0) (2025-09-17)
 
 
