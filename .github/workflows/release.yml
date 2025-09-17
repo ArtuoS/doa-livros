@@ -31,7 +31,8 @@ jobs:
             @semantic-release/release-notes-generator \
             @semantic-release/changelog \
             @semantic-release/github \
-            @semantic-release/git
+            @semantic-release/git \
+            @semantic-release/exec
 
       - name: Run Semantic Release
         id: release
