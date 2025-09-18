@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/ArtuoS/doa-livros/compare/v1.6.0...v1.6.1) (2025-09-18)
+
+
+### Bug Fixes
+
+* removendo criação de branches. ([f31d2bb](https://github.com/ArtuoS/doa-livros/commit/f31d2bbb4b8d83d6a5417158206ebd3bccc73766))
+
 # [1.6.0](https://github.com/ArtuoS/doa-livros/compare/v1.5.0...v1.6.0) (2025-09-17)
 
 
