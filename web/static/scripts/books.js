@@ -1,5 +1,4 @@
 import { getCookie } from "./cookieManager.js";
-import { showModal } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   if (getCookie("logged_user_id") == null) {
@@ -53,7 +52,7 @@ const redeem = (data) => {
       }
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
+      console.error("Error:", error);
     });
 };
 
@@ -74,6 +73,6 @@ const create = (data) => {
       }
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
+      console.error("Error:", error);
     });
 };

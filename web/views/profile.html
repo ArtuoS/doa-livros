@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles/profile.css" />
     <script type="module" src="/scripts/profile.js"></script>
     <script type="module" src="/scripts/index.js"></script>
-    <title>User Profile</title>
+    <title>Profile</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -40,7 +40,7 @@
                     <div class="profile-info">
                       <strong>Título:</strong> {{.Title}} <br />
                       <strong>Autor:</strong> {{.Author}} <br />
-                      <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não está doando{{end}} <br />
+                      <strong>Status:</strong> {{if .Donating}}Doando{{else}}Não doando{{end}} <br />
                       {{if .Donating}}
                       <button data-book-id="{{.Id}}" type="button" class="btn btn-primary btn-sm mt-2 donation" title="Livro já está para doação." disabled>Colocar para doação</button>
                       {{else}}
